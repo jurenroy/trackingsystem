@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block unauth %}
+
+<div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-8">
+                     <div class="box-element" style="background-color:#FAFAD2;">
+<!--                     <a class="btn btn-sm btn-success" href="{% url 'add_online_document' %}"><img src="{% static 'images/plus.png' %}" width="25" height="25"> New Application</a>-->
+                    <br>
+                    <em>To submit application, click "File Application", fill-out form and upload required documents.<a href="https://region10.mgb.gov.ph/wp-content/uploads/2020/09/arta.pdf">(see requirements)</a></em>
+                    <em>To check status of document, enter Code in the text field and click "Track Now" and wait for the result.</em>
+                    <hr>
+                    {%for message in messages %}
+                    <p align="center"><font color="red">{{message}}</font></p>
+                    {% endfor %}<br>
+                    <form action="view_online_search">
+                    <table cellpadding="2" cellspacing="2" width="100%">
+                        <tr>
+                          <td align="center"><input type="text" name="q" placeholder="Enter Tracking Code here!" style="font-size:16pt;height:40px;width:500px;align:center;text-align:center;background-color:gold;" required></td>
+                        </tr>
+                        <tr>
+                          <td align="center"><button type="submit" class="btn-sm btn-success" >Track Now</button></td>
+                        </tr>
+                    </table>
+                    </form>
+                    <br>
+                           {% for result in result %}
+                            {% if result.for_release %}
+                            <div class="box-element" style="background-color:#00FFFF;">
+                            <a class="btn-sm btn-secondary" href="{% url 'home' %}">Close</a><br><br>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mb-0">
+                                        Code:{{result.code}}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        Type: {{result.type}}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        Date: {{result.date_updated}}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-8 mb-0">
+                                        Subject: {{result.subject}}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mb-0">
+                                        Status : for release
+                                    </div>
+                                    <div class="form-group col-md-6 mb-0">
+                                        Remark: {{result.remark}}
+                                    </div>
+                                </div>
+                                    <hr>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                        <a class="btn-sm btn-info" href="{% url 'reupload_online_document' result.id %}">re-upload</a>
+                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}">view pdf</a>
+                                        {% if result.send_file == '' %}
+                                        No attach file
+                                        {% else %}
+                                        <a class="btn-sm btn-info" href="{{result.send_file.url}}">Download</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% elif result.online and result.process %}
+                            <div class="box-element" style="background-color:#00FFFF;">
+                                <a class="btn-sm btn-secondary" href="{% url 'home' %}">Close</a><br><br>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mb-0">
+                                        Code:{{result.code}}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        Type: {{result.type}}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        Date: {{result.date_updated}}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-8 mb-0">
+                                        Subject: {{result.subject}}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mb-0">
+                                        Status : processing
+                                    </div>
+                                    <div class="form-group col-md-6 mb-0">
+                                         Remark: {{result.remark}}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                        <a class="btn-sm btn-info" href="{% url 'reupload_online_document' result.id %}">re-upload</a>
+                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}">view pdf</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% elif result.online %}
+                            <div class="box-element" style="background-color:#00FFFF;">
+                                <a class="btn-sm btn-secondary" href="{% url 'home' %}">Close</a><br><br>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mb-0">
+                                        Code:{{result.code}}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        Type: {{result.type}}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        Date: {{result.date_updated}}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-8 mb-0">
+                                        Subject: {{result.subject}}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mb-0">
+                                        Status : for evaluation
+                                    </div>
+                                    <div class="form-group col-md-6 mb-0">
+                                        Remark: {{result.remark}}
+                                    </div>
+                                </div>
+                                    <hr>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                        <a class="btn-sm btn-info" href="{% url 'reupload_online_document' result.id %}">re-upload</a>
+                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}">view pdf</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% else %}
+                            <div class="box-element" style="background-color:#00FFFF;">
+                                <a class="btn-sm btn-secondary" href="{% url 'home' %}">Close</a><br><br>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mb-0">
+                                        Code:{{result.code}}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        Type: {{result.type}}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        Date: {{result.date_updated}}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-8 mb-0">
+                                        Subject: {{result.subject}}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4 mb-0">
+                                        Status : incomplete
+                                    </div>
+                                    <div class="form-group col-md-6 mb-0">
+                                        Remark: {{result.remark}}
+                                    </div>
+                                </div>
+                                    <hr>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                        <a class="btn-sm btn-info" href="{% url 'reupload_online_document' result.id %}">re-upload</a>
+                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}">view pdf</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endif %}
+                            {% endfor %}
+               </div>
+            </div>
+
+            <div class="col-lg-2">
+                <div class="" >
+                    <p align="center">Please <a href="login">Login</a>
+               </div>
+            </div>
+
+        </div>
+</div>
+
+{% endblock %}

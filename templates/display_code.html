@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block unauth %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="box-element" >
+                    <a class="btn btn-sm btn-light" href="{% url 'home' %}">Done</a><br>
+                    <em>DOCUMENT CODE IS: <font size="6"> {{code}}</font></em><br>
+                    <p>Please copy and remember your code, that will be used in tracking your application.</p>
+
+               </div>
+
+            </div>
+
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

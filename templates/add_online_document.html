@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block unauth %}
+{% load crispy_forms_tags %}
+
+<div class="container">
+        <div class="row">
+            <div class="col-lg-0">
+                <div >
+
+               </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="box-element" style="background-color:#FAFAD2;" >
+                    <a class="btn btn-sm btn-light" href="{% url 'home' %}">Back</a>
+                    <p><font color="red">IMPORTANT :</font> <br>
+                        <em>COMBINE all documents in one pdf file format before uploading.
+                            INCOMPLETE document will not be processed.
+                            CODE DOCUMENT will generate after submission,
+                                    please copy/keep the CODE for tracking.<br>
+                            </em>
+
+                                    </p>
+                    <hr>
+                    <p align="center"><b>ADDING NEW APPLICATION  {{code}}</b></p>
+                    <form method="POST" enctype="multipart/form-data">
+                         {% csrf_token %}
+                                <div class="form-row">
+
+                                    <div class="form-group col-md-4 mb-0">
+                                        {{ form.type| as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        {{ form.sender| as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-4 mb-0">
+                                        {{ form.contact| as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12 mb-0">
+                                        {{ form.subject| as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12 mb-0">
+                                        {{ form.description| as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+
+                                </div>
+                                <em>Please attach request letter and other supporting documents.<br></em>
+                                <div class="form-row">
+
+                                    <div class="form-group col-md-4 mb-0">
+                                        {{ form.pdf_file| as_crispy_field }}
+                                    </div>
+
+                                </div>
+                       <button type="submit" class="btn-sm btn-success" >Save</button>
+                    </form>
+               </div>
+            </div>
+
+            <div class="col-lg-0">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

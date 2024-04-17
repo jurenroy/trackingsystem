@@ -1,0 +1,520 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container" >
+        <div class="row" >
+            <div class="col-lg-12">
+                <div class="box-element">
+
+                {% if user.is_superuser %}
+
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}"><b>Dashboard(<font color="red">{{allcnt_super}}</font>)</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'received_online' %}"><b>Online Document Received(<font color="red">{{online_count}}</font>)</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'type_of_document' %}"><b>Types of Document</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'type_of_action' %}"><b>Types of Action</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'report' %}"><b>Report</b></a>
+                {% else %}
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}"><b>Dashboard(<font color="red">{{allcnt}}</font>)</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'route_history' %}"><b>Route History</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'report' %}"><b>Report</b></a>
+                {% endif %}
+
+                <div style="float:right;">
+                    {% if user.is_authenticated %}
+                    <em>Hello! {{user.username}} <a href="logout">[ Logout ]</a></em>
+                    {% endif %}
+               </div>
+               </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="box-element">
+                        <div class="row">
+                            <div class="col-lg-12">
+                             <form action="division_docs" method="GET">
+                                  <div style="float:left;">
+                                       <a href="{% url 'dashboard' %}">Back</a><br><br>
+                                      {% if user.is_superuser %}
+                                      <a href="{% url 'division_docs' %}"><font size="3" color="green">Division Docs ({{div_res}})</font></a>
+                                      {% else %}
+                                      <a href="{% url 'division_docs' %}"><font size="3" color="green">Division Docs ({{div_res}})</font></a>
+                                      {% endif %}
+
+                                  </div>
+                                  <div style="float:right;">
+                                      Results: {{count}}
+
+                                          <input type="text" name="q" placeholder="Type to search and print" size="32">
+                                          <button type="submit" class="btn-sm btn-success" name="search">Search </button>
+                                           <button type="submit" class="btn-sm btn-success" name="print">Print</button>
+                                  </div>
+                              </form>
+                            </div>
+                        </div>
+
+                                {% for result in result %}
+                                    {% if result.deadline <= dd %}
+                                        <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="box-element" style="background-color:#FAFAD2;">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4 mb-0" >
+                                                        <em>{{result.category}}-{{result.type}}</em> to <em>{{result.route}}</em>
+                                                    </div>
+                                                    <div class="form-group col-md-4 mb-0" >
+                                                        <em>Received:</em>{{result.date_received}}
+                                                    </div>
+                                                     <div class="form-group col-md-4 mb-0">
+                                                        <em>Expected Date:</em> {{result.deadline}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 mb-0">
+                                                        <em>Document Code:</em><a class="btn btn-sm btn-danger" href="{% url 'comment_document' result.code %}">{{result.code}}</a>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                     <div class="form-group col-md-12 mb-0" >
+                                                         <a href="{% url 'comment_document' result.code %}"> <em><font size="6">{{result.subject}}</font></em></a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-8 mb-0">
+                                                        <em>Description:</em><b>{{result.description}}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 mb-0" >
+                                                        <em>Action/Required:</em><b>{{result.action_taken}}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                     <div class="form-group col-md-36 mb-0">
+                                                         <em>Sender:<b>{{result.sender}} with contact {{result.contact}}</b></em>
+                                                    </div>
+                                                </div>
+
+                                                <hr color="#FF4500">
+                                                 <div class="form-row">
+                                                     <div class="form-group col-md-3 mb-0">
+                                                         {% if result.for_release %}
+                                                        <em>Status:for release</em>
+                                                         {% else %}
+                                                         <em>Status:processing</em>
+                                                         {% endif %}
+                                                    </div>
+                                                     <div class="form-group col-md-3 mb-0">
+                                                        <em>Updated:</em>{{result.date_updated}}
+                                                    </div>
+                                                    <div class="form-group col-md-6 mb-0">
+                                                       <a href="{% url 'document_history' result.code %}">Document History</a> |
+                                                        <a href="{% url 'display_qrcode' result.code %}">QR code</a>
+                                                         {% if user.is_superuser %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-warning" href="{% url 'edit_document' result.id %}"><img src="{% static 'images/edit1.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% elif result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                        {% elif result.multiple_route and result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% else %}
+                                                        <div style="float:right;">
+                                                         <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                         </div>
+                                                         {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {% elif result.deadline == days_togo %}
+                                        <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="box-element" style="background-color:#FAFAD2;">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4 mb-0" >
+                                                        <em>{{result.category}}-{{result.type}}</em> to <em>{{result.route}}</em>
+                                                    </div>
+                                                    <div class="form-group col-md-4 mb-0" >
+                                                        <em>Received:</em>{{result.date_received}}
+                                                    </div>
+                                                     <div class="form-group col-md-4 mb-0">
+                                                        <em>Expected Date:</em> {{result.deadline}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 mb-0">
+                                                        <em>Document Code:</em><a class="btn btn-sm btn-primary" href="{% url 'comment_document' result.code %}">{{result.code}}</a>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                     <div class="form-group col-md-12 mb-0" >
+                                                         <a href="{% url 'comment_document' result.code %}"> <em><font size="6">{{result.subject}}</font></em></a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-8 mb-0">
+                                                        <em>Description:</em><b>{{result.description}}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 mb-0" >
+                                                        <em>Action/Required:</em><b>{{result.action_taken}}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                     <div class="form-group col-md-36 mb-0">
+                                                         <em>Sender:<b>{{result.sender}} with contact {{result.contact}}</b></em>
+                                                    </div>
+                                                </div>
+
+                                                <hr color="blue" size="20">
+                                                 <div class="form-row">
+                                                     <div class="form-group col-md-3 mb-0">
+                                                         {% if result.for_release %}
+                                                        <em>Status:for release</em>
+                                                         {% else %}
+                                                         <em>Status:processing</em>
+                                                         {% endif %}
+                                                    </div>
+                                                     <div class="form-group col-md-3 mb-0">
+                                                        <em>Updated:</em>{{result.date_updated}}
+                                                    </div>
+                                                    <div class="form-group col-md-6 mb-0">
+                                                       <a href="{% url 'document_history' result.code %}">Document History</a> |
+                                                        <a href="{% url 'display_qrcode' result.code %}">QR code</a>
+                                                         {% if user.is_superuser %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-warning" href="{% url 'edit_document' result.id %}"><img src="{% static 'images/edit1.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% elif result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                        {% elif result.multiple_route and result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% else %}
+                                                        <div style="float:right;">
+                                                         <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                         </div>
+                                                         {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {% elif result.urgent %}
+                                     <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="box-element" style="background-color:#FAFAD2;">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4 mb-0">
+                                                        <em>{{result.category}}-{{result.type}}</em> to <em>{{result.route}}</em>
+                                                    </div>
+                                                    <div class="form-group col-md-4 mb-0">
+                                                        <em>Received:</em>{{result.date_received}}
+                                                    </div>
+                                                     <div class="form-group col-md-4 mb-0">
+                                                        <em>Expected Date:</em> {{result.deadline}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 mb-0">
+                                                        <em>Document Code:</em><a class="btn btn-sm btn-warning" href="{% url 'comment_document' result.code %}">{{result.code}}</a>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                     <div class="form-group col-md-12 mb-0" >
+                                                        <a href="{% url 'comment_document' result.code %}"> <em><font size="6">{{result.subject}}</font></em></a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-8 mb-0">
+                                                        <em>Description:</em><b>{{result.description}}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4 mb-0" >
+                                                        <em>Action/Required:</em><b>{{result.action_taken}}</b>
+                                                    </div>
+                                                </div>
+                                                 <div class="form-row">
+                                                     <div class="form-group col-md-36 mb-0">
+                                                         <em>Sender:<b>{{result.sender}} with contact {{result.contact}}</b></em>
+                                                    </div>
+                                                </div>
+                                                <hr color="gold" size="10">
+                                                 <div class="form-row">
+                                                     <div class="form-group col-md-3 mb-0">
+                                                         {% if result.for_release %}
+                                                        <em>Status:for release</em>
+                                                         {% else %}
+                                                         <em>Status:processing</em>
+                                                         {% endif %}
+                                                    </div>
+                                                     <div class="form-group col-md-3 mb-0">
+                                                        <em>Updated:</em>{{result.date_updated}}
+                                                    </div>
+                                                     <div class="form-group col-md-6 mb-0">
+                                                         <a href="{% url 'document_history' result.code %}">Document History</a> |
+                                                         <a href="{% url 'display_qrcode' result.code %}">QR code</a>
+                                                        {% if user.is_superuser %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-warning" href="{% url 'edit_document' result.id %}"><img src="{% static 'images/edit1.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% elif result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                        {% elif result.multiple_route and result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% else %}
+                                                        <div style="float:right;">
+                                                         <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                         </div>
+                                                         {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {% elif result.for_release %}
+                                         <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="box-element" style="background-color:#FAFAD2;">
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4 mb-0">
+                                                        <em>{{result.category}}-{{result.type}}</em> to <em>{{result.route}}</em>
+                                                    </div>
+                                                    <div class="form-group col-md-4 mb-0">
+                                                        <em>Received:</em>{{result.date_received}}
+                                                    </div>
+                                                     <div class="form-group col-md-4 mb-0">
+                                                        <em>Expected Date:</em> {{result.deadline}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-6 mb-0">
+                                                        <em>Document Code:</em><a class="btn btn-sm btn-success" href="{% url 'comment_document' result.code %}">{{result.code}}</a>
+                                                    </div>
+                                                </div>
+                                               <div class="form-row">
+                                                     <div class="form-group col-md-12 mb-0" >
+                                                        <a href="{% url 'comment_document' result.code %}"> <em><font size="6">{{result.subject}}</font></em></a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-8 mb-0">
+                                                        <em>Description:</em><b>{{result.description}}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4 mb-0" >
+                                                        <em>Action/Required:</em><b>{{result.action_taken}}</b>
+                                                    </div>
+                                                </div>
+                                                 <div class="form-row">
+                                                     <div class="form-group col-md-36 mb-0">
+                                                         <em>Sender:<b>{{result.sender}} with contact {{result.contact}}</b></em>
+                                                    </div>
+                                                </div>
+                                                <hr color="green" size="10">
+                                                 <div class="form-row">
+                                                     <div class="form-group col-md-3 mb-0">
+                                                         {% if result.for_release %}
+                                                        <em>Status:for release</em>
+                                                         {% else %}
+                                                         <em>Status:processing</em>
+                                                         {% endif %}
+                                                    </div>
+                                                     <div class="form-group col-md-3 mb-0">
+                                                        <em>Updated:</em>{{result.date_updated}}
+                                                    </div>
+                                                     <div class="form-group col-md-6 mb-0">
+                                                          <a href="{% url 'document_history' result.code %}">Document History</a> |
+                                                         <a href="{% url 'display_qrcode' result.code %}">QR code</a>
+                                                        {% if user.is_superuser %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-warning" href="{% url 'edit_document' result.id %}"><img src="{% static 'images/edit1.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-success" href="{% url 'send_approved_document' result.id %}"><img src="{% static 'images/card.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% elif result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                        {% elif result.multiple_route and result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% else %}
+                                                        <div style="float:right;">
+                                                         <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                         </div>
+                                                         {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                     {% else %}
+                                         <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="box-element" style="background-color:#FAFAD2;">
+                                                <div class="form-row" >
+                                                    <div class="form-group col-md-4 mb-0">
+                                                        <em>{{result.category}}-{{result.type}}</em> to <em>{{result.route}}</em>
+                                                    </div>
+                                                    <div class="form-group col-md-4 mb-0">
+                                                        <em>Received:</em>{{result.date_received}}
+                                                    </div>
+                                                     <div class="form-group col-md-4 mb-0">
+                                                        <em>Expected Date:</em> {{result.deadline}}
+                                                    </div>
+                                                </div>
+                                                <div class="form-row" >
+                                                    <div class="form-group col-md-6 mb-0">
+                                                        <em>Document Code:</em><a class="btn btn-sm btn-light" href="{% url 'comment_document' result.code %}">{{result.code}}</a>
+                                                    </div>
+                                                </div>
+                                               <div class="form-row">
+                                                     <div class="form-group col-md-12 mb-0" >
+                                                        <a href="{% url 'comment_document' result.code %}"> <em><font size="6">{{result.subject}}</font></em></a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-8 mb-0">
+                                                        <em>Description:</em><b>{{result.description}}</b>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-md-4 mb-0" >
+                                                        <em>Action/Required:</em><b>{{result.action_taken}}</b>
+                                                    </div>
+                                                </div>
+                                                 <div class="form-row">
+                                                     <div class="form-group col-md-36 mb-0">
+                                                         <em>Sender:<b>{{result.sender}} with contact {{result.contact}}</b></em>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                                 <div class="form-row">
+                                                     <div class="form-group col-md-3 mb-0">
+                                                         {% if result.for_release %}
+                                                        <em>Status:for release</em>
+                                                         {% else %}
+                                                         <em>Status:processing</em>
+                                                         {% endif %}
+                                                    </div>
+                                                     <div class="form-group col-md-3 mb-0">
+                                                        <em>Updated:</em>{{result.date_updated}}
+                                                    </div>
+                                                     <div class="form-group col-md-6 mb-0">
+                                                           <a href="{% url 'document_history' result.code %}">Document History</a> |
+                                                         <a href="{% url 'display_qrcode' result.code %}">QR code</a>
+                                                         {% if user.is_superuser %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-warning" href="{% url 'edit_document' result.id %}"><img src="{% static 'images/edit1.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% elif result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                        {% elif result.multiple_route and result.route_id == current_user_id %}
+                                                        <div style="float:right;">
+                                                        <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                        <a class="btn-sm btn-secondary" href="{% url 'route_document' result.id %}"><img src="{% static 'images/give.png' %}" width="15" height="15"></a>
+                                                        </div>
+                                                         {% else %}
+                                                        <div style="float:right;">
+                                                         <a class="btn-sm btn-info" href="{{result.pdf_file.url}}"><img src="{% static 'images/type.png' %}" width="15" height="15"></a>
+                                                         </div>
+                                                         {% endif %}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                {% endfor %}
+                                   <br>
+                                     <nav aria-label="Page navigation example">
+                                        {% if result.has_other_pages %}
+                                            <ul class="pagination">
+                                            {% if result.has_previous %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ result.previous_page_number }}">Previous</a></li>
+                                            {% else %}
+                                            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                                            {% endif %}
+                                          {% for i in result.paginator.page_range %}
+                                            {% if result.number == i %}
+                                            <li class="page-item active"><span class="page-link">{{i}}<span class="sr-only">(current)</span></span></li>
+                                            {% else %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+                                            {% endif %}
+                                          {% endfor %}
+
+                                            {% if result.has_next %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ result.next_page_number }}">Next</a></li>
+                                            {% else %}
+                                            <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                            {% endif %}
+                                            </ul>
+                                        {% endif %}
+                                     </nav>
+               </div>
+                <font size="1"><em>version 2.0 | jovenclar007@gmail.com</em></font>
+            </div>
+
+            <div class="col-lg-0">
+                <div class="" >
+
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

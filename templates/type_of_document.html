@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="box-element" style="background-color:#FAFAD2;">
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}">Back</a>
+                    <p align="center"><b>TYPE OF DOCUMENT</b></p>
+                    <form method="POST" id="usrform">
+                         {% csrf_token %}
+                                {% for message in messages %}
+                        <p align="center"><font color="red">{{message}}</font></p>
+                                {% endfor %}
+                                <div class="form-row">
+                                    <div class="form-group col-md-12 mb-0">
+                                        {{ form.type_name| as_crispy_field }}
+                                    </div>
+                                </div>
+
+                       <button type="submit" class="btn-sm btn-success">Save</button>
+                    </form>
+                    <br>
+                     <div>
+                       <table class="table table-hover" cellpadding="2" cellspacing="2" width="100%">
+                           <tr>
+                               <th>Document Type</th>
+                               <th>Action</th>
+                           </tr>
+                           {% for i in i_type %}
+                           <tr>
+                               <td>{{i.type_name}}</td>
+                               <td align="right"><a href="{% url 'edit_type_of_document' i.id %}"><img src="{% static 'images/pencil.png' %}" width="15" height="15"></a></td>
+                           </tr>
+                           {% endfor %}
+                       </table>
+                    </div>
+                        <nav aria-label="Page navigation example">
+                        {% if i_type.has_other_pages %}
+                            <ul class="pagination">
+                            {% if i_type.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i_type.previous_page_number }}">Previous</a></li>
+                            {% else %}
+                            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                            {% endif %}
+                          {% for i in i_type.paginator.page_range %}
+                            {% if i_type.number == i %}
+                            <li class="page-item active"><span class="page-link">{{i}}<span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+                            {% endif %}
+                          {% endfor %}
+
+                            {% if i_type.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i_type.next_page_number }}">Next</a></li>
+                            {% else %}
+                            <li class="page-item disabled"><span class="page-link">Next</span></li>
+                            {% endif %}
+                            </ul>
+                        {% endif %}
+                        </nav>
+               </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="box-element" style="background-color:#FAFAD2;">
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}">Back</a>
+                    <p align="center"><b>SENDING DOCUMENT</b></p>
+                    <form method="POST"  enctype="multipart/form-data">
+                         {% csrf_token %}
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                        {{ form.code| as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6 mb-0">
+                                        {{ form.sender| as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                        {{ form.send_file| as_crispy_field }}
+                                    </div>
+                                </div>
+                       <button type="submit" class="btn-sm btn-success">Send</button>
+                    </form>
+               </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container" >
+        <div class="row" >
+            <div class="col-lg-12">
+                <div class="box-element">
+
+
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}"><b>back to Dashboard</b></a>
+
+                <div style="float:right;">
+                    {% if user.is_authenticated %}
+                    <em>Hello! {{user.username}} <a href="logout">[ Logout ]</a></em>
+                    {% endif %}
+               </div>
+               </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="box-element">
+                        <div class="row">
+                            <div class="col-lg-12">
+                             <form action="outgoing" method="GET">
+                                  <div style="float:left;">
+                                       <a href="{% url 'add_outgoing' %}"><img src="{% static 'images/plus.png' %}" width="35" height="35"></a><br>
+                                  </div>
+                                  <div style="float:right;">
+                                      Results: {{count}}
+
+                                          <input type="text" name="q" placeholder="Type to search and print" size="32">
+                                          <button type="submit" class="btn-sm btn-success" name="search">Search </button>
+
+                                  </div>
+                              </form>
+                            </div>
+                        </div>
+                    <br>
+
+                            <table class="table table-hover">
+                            <thead>
+                              <tr bgcolor="green" align="left">
+                                <th>Document Code</th>
+                                <th>Subject</th>
+                                <th>Type</th>
+                                <th>To</th>
+                                <th>From</th>
+                                <th>Date Created</th>
+                                <th>Action</th>
+
+
+
+
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for result in results %}
+                                <tr align="left">
+                                  <td >{{result.doc_code}}</td>
+                                  <td>{{result.subject}}</td>
+                                  <td>{{result.doc_type}}</td>
+                                  <td>{{result.doc_to}}</td>
+                                  <td>{{result.doc_from}}</td>
+                                  <td>{{result.date_upload}}</td>
+
+
+                                  <td align="right" width="140">
+                                    <a class="btn-sm btn-warning" href="{{result.attach_file.url}}">view</a>
+                                  </td>
+                                 <!--submitting id to the browser and get by views
+                                 <form action="edit_item" method="GET" id="viewform1">
+                                    <button type="submit" class="buttone" name="system" value="{{item.id}}" form="viewform1" >Edit</button>
+                                  </form>-->
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                            </table>
+
+
+                         <br>
+                         <nav aria-label="Page navigation example">
+                            {% if result.has_other_pages %}
+                                <ul class="pagination">
+                                {% if result.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ result.previous_page_number }}">Previous</a></li>
+                                {% else %}
+                                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                                {% endif %}
+                              {% for i in result.paginator.page_range %}
+                                {% if result.number == i %}
+                                <li class="page-item active"><span class="page-link">{{i}}<span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+                                {% endif %}
+                              {% endfor %}
+
+                                {% if result.has_next %}
+                                <li class="page-item"><a class="page-link" href="?page={{ result.next_page_number }}">Next</a></li>
+                                {% else %}
+                                <li class="page-item disabled"><span class="page-link">Next</span></li>
+                                {% endif %}
+                                </ul>
+                            {% endif %}
+                         </nav>
+
+               </div>
+                <font size="1"><em>version 2.0 | jovenclar007@gmail.com</em></font>
+            </div>
+
+            <div class="col-lg-0">
+                <div class="" >
+
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

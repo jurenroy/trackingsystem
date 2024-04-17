@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block unauth %}
+{% load crispy_forms_tags %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+
+            <div class="col-lg-8">
+                <a class="btn btn-sm btn-warning" href="{% url 'received_online' %}">Back</a>
+                <div class="box-element" style="background-color:#FAFAD2;">
+                    <em>Magbigay ng dahilan o rason kung bakit hindi tinanggap ang aplikasyon.</em>
+                    <hr>
+                    <form method="POST" enctype="multipart/form-data">
+                         {% csrf_token %}
+
+                        {{form|crispy}}
+
+                       <button type="submit" class="btn-sm btn-success">Deny Now</button>
+                    </form>
+
+                    <hr>
+               </div>
+            </div>
+
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

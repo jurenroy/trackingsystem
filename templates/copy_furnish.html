@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container" >
+        <div class="row" >
+            <div class="col-lg-12">
+                <div class="box-element">
+
+                {% if user.is_superuser %}
+
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}"><b>Dashboard(<font color="red">{{allcnt_super}}</font>)</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'received_online' %}"><b>Online Document Received(<font color="red">{{online_count}}</font>)</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'type_of_document' %}"><b>Types of Document</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'type_of_action' %}"><b>Types of Action</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'report' %}"><b>Report</b></a>
+                {% else %}
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}"><b>Dashboard(<font color="red">{{allcnt}}</font>)</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'route_history' %}"><b>Route History</b></a>
+                    <a class="btn btn-sm btn-light" href="{% url 'report' %}"><b>Report</b></a>
+                {% endif %}
+
+                    <div style="float:right;">
+                        {% if user.is_authenticated %}
+                        <em>Hello! {{user.username}} <a href="logout">[ Logout ]</a></em>
+                        {% endif %}
+                   </div>
+               </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="box-element">
+                        <div class="row">
+                            <div class="col-lg-12">
+                             <form action="due_docs" method="GET">
+                                  <div style="float:left;">
+                                       <a href="{% url 'dashboard' %}">Back</a><br><br>
+                                      {% if user.is_superuser %}
+                                      <a href="{% url 'copy_furnish' %}"><font size="3" color="black">Copy Furnish ({{multir}})</font></a>
+                                      {% else %}
+                                      <a href="{% url 'copy_furnish' %}"><font size="3" color="black">Copy Furnish ({{multir}})</font></a>
+                                      {% endif %}
+
+                                  </div>
+                              </form>
+                            </div>
+                        </div><br>
+
+                    <div>
+
+                        <table>
+
+                         <tr>
+                             <th>Document Code</th>
+                             <th>Date Received</th>
+                         </tr>
+                            {% for cc in mycopy %}
+                         <tr>
+                             <td style="width:60%"><li><a href="{% url 'detailed_copyfurnish' cc.doc_code %}">{{cc.doc_code}}</a></li></td>
+                             <td>{{cc.date_rcv}}</td>
+                         </tr>
+                            {% endfor %}
+                        </table>
+
+
+
+                    </div>
+                </div>
+            <font size="1"><em>version 2.0 | jovenclar007@gmail.com</em></font>
+            <div class="col-lg-0">
+                <div class="" >
+
+
+               </div>
+            </div>
+          </div>
+        </div>
+</div>
+{% endblock %}

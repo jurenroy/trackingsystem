@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block unauth %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="box-element" >
+
+                    <p align="right"><a href="{% url 'dashboard' %}">close</a></p>
+                    <p align="center"><em>Right click and save QR code.(save image as...)</em></p>
+                    <p align="center"><img src="{% static 'qrcode_images/' %}{{codes}}.jpg" width="300" height="300" /></p>
+
+               </div>
+
+            </div>
+
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

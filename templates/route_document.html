@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-1">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="box-element" style="background-color:#FAFAD2;">
+                     <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}">Back</a>
+                    <p align="center"><b>ROUTE DOCUMENT</b></p>
+                    <form method="POST" enctype="multipart/form-data">
+                         {% csrf_token %}
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                        {{ form.code| as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-6 mb-0">
+                                        {{ form.route| as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                        {{ form.deadline| as_crispy_field }}
+                                    </div>
+                                     <div class="form-group col-md-6 mb-0">
+                                        {{ form.action_taken| as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                      Comment<textarea cols="64" rows="2" name="comment" ></textarea>
+                                    </div>
+
+                                </div>
+                                <div class="form-row">
+                                     <div class="form-group col-md-3 mb-0">
+                                        {{ form.acted_release| as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-3 mb-0">
+                                        {{ form.for_release| as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-2 mb-0">
+                                        {{ form.urgent| as_crispy_field }}
+                                    </div>
+                                    <div class="form-group col-md-2 mb-0">
+                                        {{ form.confidential | as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 mb-0">
+                                         <div class="dropdown">
+                                             <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" >
+                                                 Click and select Employee/s to send a Cc of document
+                                             </button>
+                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                 {% for result in emp %}
+                                                 <input type="checkbox" name="cfurnish" value={{result.id}}>{{result.username}}<br/>
+                                                 {% endfor %}
+                                             </div>
+                                         </div>
+                                    </div>
+                                </div> <br/>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3 mb-0">
+                                        <input type="file" id="myFile" name="filename">
+                                    </div>
+                                </div>
+                        <br>
+                       <button type="submit" class="btn-sm btn-success">Save</button>
+                    </form>
+               </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="" >
+                    <div style="float:right;"><em>{{date_received}}</em></div><br>
+                    <font color="red">Subject:</font>{{subject}}<br>
+                    <font color="red">Description:</font>  {{des}}
+                    {% for result in result %}
+                    <div class="box-element" style="background-color:#FAFAD2;">
+                        from: <b>{{result.sender}}</b> >>>>> to:<b>{{result.routed_to}}</b> <div style="float:right;"><em>{{result.date_rcv}}</em></div>
+                        <br>
+                        >>>>> {{result.comment}}<br>
+                        ({{result.action}})<br>
+                        {% if result.attach_file == '' %}
+                        No attach file...
+                        {% else %}
+                        <a href="{{result.attach_file}}">see attached file</a>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

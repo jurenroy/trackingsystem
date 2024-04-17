@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+        <div class="row">
+            <div class="col-lg-0">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="box-element" >
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}">Back to Dashboard</a>
+                    <hr>
+                    <table class="table table-hover">
+                    <thead>
+                      <tr bgcolor="gold" align="center">
+                        <th>Document Code</th>
+                        <th>Document Type</th>
+                        <th>Subject</th>
+                        <th>Description</th>
+                        <th>Sender</th>
+                        <th>Date Received</th>
+                        <th>Action</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for result in result %}
+                        <tr>
+                          <td width="180"><a href="">{{result.code}}</a></td>
+                          <td>{{result.type}}  <a class="btn-sm btn-info" href="{{result.pdf_file.url}}">pdf</a></td>
+                          <td>{{result.subject}}</td>
+                          <td>{{result.description}}</td>
+                          <td>{{result.sender}}</td>
+                          <td>{{result.date_received}}</td>
+
+
+                          <td align="right" width="140">
+
+                              {% if result.online and result.complete %}
+
+                               <a class="btn-sm btn-warning" href="{% url 'accept_document' result.id %}">accept</a>
+                               <a class="btn-sm btn-primary" href="{% url 'deny_online_document' result.id %}">deny</a>
+                              {% else %}
+                              <a class="btn-sm btn-danger" href="">denied</a>
+                              {% endif %}
+                          </td>
+                         <!--submitting id to the browser and get by views
+                         <form action="edit_item" method="GET" id="viewform1">
+                            <button type="submit" class="buttone" name="system" value="{{item.id}}" form="viewform1" >Edit</button>
+                          </form>-->
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                    <hr>
+               </div>
+            </div>
+
+            <div class="col-lg-0">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

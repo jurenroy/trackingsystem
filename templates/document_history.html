@@ -1,0 +1,90 @@
+{% load static %}
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @page{
+      size:a4 portrait;
+      margin:1cm 1.5cm 1cm 1.5cm;
+    }
+  </style>
+</head>
+<body>
+ <table class="table" cellpadding="2" cellspacing="2" width="100%" align="center" >
+     <tr>
+         <td>
+             <p align="left"><img src="C:/Users/Administrator/MGBX/trackingsystem/static/qrcode_images/{{code}}.jpg" width="80" height="80" /></p>
+         </td>
+         <td>
+           <p align="center"><img src="C:/Users/Administrator/MGBX/trackingsystem/static/images/MGBlogo.png" width="60" height="60" /></p>
+         </td>
+         <td>
+         </td>
+     </tr>
+ </table>
+<p align="center"><font size="4">Republic of the Philippines<br>
+    Department of Environment and Natural Resources</font><br>
+    <font size="5"><b>MINES AND GEOSCIENCES BUREAU X</b></font><br>
+    <em><font size="4">Region X, Puntod, Cagayan de Oro City</font></em>
+    <br><br>
+    <font size="5"><u>DOCUMENT HISTORY</u></font>
+</p>
+      <table class="table" cellpadding="2" cellspacing="2" width="100%" align="center" >
+          <tr align="center">
+              <td width="80"><font size="5">IMPORTANT:</font></td>
+              <td><p align="justify"><font size="5">All documents, letters, communication, whether
+                  Official or from private Citizens should be
+                  acted upon expeditiously. The Office receiving a
+                  Communication from private persons should
+                  be written a “STATUS” letter immediately to the
+                  sender as soon as action on processing starts.</font></p></td>
+          </tr>
+      </table>
+<br>
+<font size="5">Document Code: <u>{{code}}</u></font><br>
+<font size="5">I. IN THE RECORD SECTION OR DIVISION: (DEPTMENT PROPERTY/BUREAU/AGENCY)</font>
+<table class="table" cellpadding="2" cellspacing="2" width="100%" >
+          <tr>
+            <td width="110"><font size="4">SENDER: </font></td>
+              <td colspan="4"> <font size="5"><u>{{sender}}</u></font></td>
+          </tr>
+          <tr>
+            <td width="110"><font size="4" >SUBJECT: </font></td>
+              <td colspan="4"> <font size="5"><u>{{subject}}</u></font></td>
+          </tr>
+          <tr>
+            <td width="110"><font size="4">ATTACHMENT: </font></td>
+              <td colspan="4"><font size="5"><u>{{des}}</u></font></td>
+          </tr>
+          <tr>
+            <td width="230"><font size="4">ARTA DEADLINE: </font></td>
+              <td width="250"> <font size="4"><u>{{deadline}}</u></font></td>
+            <td width="300" align="right"><font size="4">DATE RECORDED:</font></td>
+              <td width="320"> <font size="4"><u>{{date_received}}</u></font></td>
+          </tr>
+      </table>
+<p align="justify"><font size="5">IN THE STAFF/SERVICES/DIVISIONS/SECTIONS (DEPARTMENT PROPERTY IN THE BUREAU/ATTACHED AGENCIES)</font></p>
+    <table class="table" cellpadding="2" cellspacing="2" width="100%" border="1">
+          <tr>
+            <th><font size="4">FROM</font></th>
+            <th > <font size="4">TO</font></th>
+            <th><font size="4">DATE/TIME</font></th>
+            <th > <font size="4">Instructions/Action Required/Taken</font></th>
+            <th > <font size="4">Comment/Reason</font></th>
+          </tr>
+            {% for result in result %}
+          <tr>
+            <td align="center"><font size="4">{{result.sender}}</font></td>
+            <td> <font size="4">{{result.routed_to}}</font></td>
+            <td align="center"><font size="4">{{result.date_rcv}}</font></td>
+            <td> <font size="4"><br>{{result.action}}</font></td>
+            <td> <font size="4">{{result.comment}}</font></td>
+          </tr>
+
+
+           {% endfor %}
+      </table>
+
+</body>
+</html>

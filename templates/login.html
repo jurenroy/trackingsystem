@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block unauth %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-4">
+                <div style="Float:right"><a class="btn btn-sm btn-white" href="{% url 'home' %}"><font size="2">Close</font></a></div>
+                <div >
+                    <em>For employee only</em>
+                      <hr>
+                    {% for message in messages %}
+                    <p align="center"><font color="red">{{message}}</font></p>
+                    {% endfor %}
+                    <form action="login" method="POST">
+                    {% csrf_token %}
+                    <table cellpadding="2" cellspacing="2" width="100%">
+
+                       <tr align="center">
+                           <td><input type="text" placeholder="Enter Username" name="username" style="width:300px;text-align:center;background-color:gold;" required></td>
+                       </tr>
+                        <tr align="center">
+                           <td><input type="password" placeholder="Enter Password" name="password" style="width:300px;text-align:center;background-color:gold;" required></td>
+                       </tr>
+                       <tr align="center">
+                             <td><button type="submit" class="btn-sm btn-success">Login</button></td>
+                       </tr>
+
+                    </table>
+                </form>
+                    <font size="1"><em>version 2.0 | jovenclar007@gmail.com</em></font>
+               </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="">
+
+               </div>
+            </div>
+        </div>
+
+
+</div>
+{% endblock %}

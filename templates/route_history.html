@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="box-element" style="background-color:gold;">
+                    <a class="btn btn-sm btn-light" href="{% url 'dashboard' %}">Back</a><br>
+                    <font size="4">ROUTE HISTORY (<em>Click the Document Code</em>)</font>
+                    <div style="float:right;"><em>{{date_received}}</em></div><br>
+
+                    {% for result in result %}
+                    <div class="box-element" style="background-color:#FAFAD2;">
+                        from: <b>{{result.sender}}</b> >>>>> to:<b>{{result.routed_to}}</b> <div style="float:right;"><em>{{result.date_rcv}}</em></div>
+                        <br>
+                        Document Code:<a href="{% url 'route_history_code' pk=result.doc_code %}">{{result.doc_code}}</a><br>
+                        >>>>> {{result.comment}}<br>
+                        ({{result.action}})<br>
+                        {% if result.attach_file == '' %}
+                        No attach file...
+                        {% else %}
+                        <a href="{{result.attach_file}}">see attached file</a>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+               </div>
+            </div>
+
+            <div class="col-lg-2">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

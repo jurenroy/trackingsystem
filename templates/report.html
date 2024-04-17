@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block unauth %}
+<br><br>
+<div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="" >
+
+               </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="box-element" >
+                    <a class="btn btn-sm btn-success" href="{% url 'dashboard' %}">back to dashboard</a><br>
+                    <br>
+                        <form method="POST">
+                            {% csrf_token %}
+                        <label for="div_office">Choose Division:</label>
+                        <select name="division" >
+                          <option value="GD">GD</option>
+                          <option value="FAD">FAD</option>
+                          <option value="MSESDD">MSESDD</option>
+                          <option value="MMD">MMD</option>
+                          <option value="ORD">ORD</option>
+                        </select>
+                    <br>
+                        From:<input type="date" name="fromdate">
+                        To:<input type="date" name="todate"><br><br>
+                        <input type="submit" value="Generate">
+                        </form>
+               </div>
+
+            </div>
+
+            <div class="col-lg-3">
+                <div class="" >
+
+               </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

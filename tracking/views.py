@@ -471,10 +471,11 @@ def comment_document(request, pk):  # view pdf history of docs
                'date_received': docid.date_received, 'deadline': docid.deadline, 'subject': docid.subject,'pdf_file':docid.pdf_file}
     return render(request, 'comment_document.html', context)
 
+# mao ni siya ang mo view sa history per user
 def route_history(request):  # view pdf history of docs
     current_user_name = request.user.username
     #docid = Document.objects.get(code=pk)
-    result = Routed.objects.filter(sender=current_user_name)
+    result = Routed.objects.filter(sender=current_user_name).order_by('-date_rcv')
     context = {'result': result}
     return render(request, 'route_history.html', context)
 

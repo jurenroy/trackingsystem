@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load url_filters %}
 {% block content %}
 <div class="container" >
         <div class="row" >
@@ -506,10 +507,11 @@
                                 {% endfor %}
                                    <br>
                                      <nav aria-label="Page navigation example">
+
                                         {% if result.has_other_pages %}
                                             <ul class="pagination">
                                             {% if result.has_previous %}
-                                            <li class="page-item"><a class="page-link" href="?page={{ result.previous_page_number }}">Previous</a></li>
+                                            <li class="page-item"><a class="page-link" href="?{{ request.GET.urlencode|add:'&'|remove_duplicate_page }}page={{ result.previous_page_number }}">Previous</a></li>
                                             {% else %}
                                             <li class="page-item disabled"><span class="page-link">Previous</span></li>
                                             {% endif %}
@@ -517,12 +519,12 @@
                                             {% if result.number == i %}
                                             <li class="page-item active"><span class="page-link">{{i}}<span class="sr-only">(current)</span></span></li>
                                             {% else %}
-                                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+                                            <li class="page-item"><a class="page-link" href="?{{ request.GET.urlencode|add:'&'|remove_duplicate_page }}page={{ i }}">{{i}}</a></li>
                                             {% endif %}
                                           {% endfor %}
 
                                             {% if result.has_next %}
-                                            <li class="page-item"><a class="page-link" href="?page={{ result.next_page_number }}">Next</a></li>
+                                            <li class="page-item"><a class="page-link" href="?{{ request.GET.urlencode|add:'&'|remove_duplicate_page }}page={{ result.next_page_number }}">Next</a></li>
                                             {% else %}
                                             <li class="page-item disabled"><span class="page-link">Next</span></li>
                                             {% endif %}
